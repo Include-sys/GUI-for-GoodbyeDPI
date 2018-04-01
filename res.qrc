@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>GBDPI/0_russia_update_blacklist_file.cmd</file>
+        <file>GBDPI/1_russia_blacklist.cmd</file>
+        <file>GBDPI/1_russia_blacklist_dnsredir.cmd</file>
+        <file>GBDPI/2_all.cmd</file>
+        <file>GBDPI/2_all_dnsredir.cmd</file>
+        <file>GBDPI/3_all_dnsredir_hardcore.cmd</file>
+        <file>GBDPI/blacklist.txt</file>
+        <file>GBDPI/x86_64/goodbyedpi.exe</file>
+        <file>GBDPI/x86_64/WinDivert.dll</file>
+        <file>GBDPI/x86_64/WinDivert64.sys</file>
+    </qresource>
+</RCC>
