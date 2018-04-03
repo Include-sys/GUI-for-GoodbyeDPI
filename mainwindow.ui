@@ -59,17 +59,13 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>400</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextBesideIcon</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -77,11 +73,30 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionAyarlar"/>
+   <addaction name="actionAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionAyarlar">
+   <property name="icon">
+    <iconset>
+     <normalon>:/images/images/settings-gears-button.png</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Ayarlar</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset>
+     <normalon>:/images/images/info-button.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Hakkinda</string>
    </property>
   </action>
  </widget>

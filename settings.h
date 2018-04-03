@@ -16,6 +16,8 @@ public:
     explicit Settings(QWidget *parent = 0);
     ~Settings();
 
+    void ayarKayit();
+
 public slots:
     void onCheckedDefaultParam();
     void onCheckedCustomParam();
@@ -43,9 +45,20 @@ public slots:
     void onCheckedDnsv6Port();
     void onCheckedBlacklist();
 
+    void onCheckedRadioQuick1();
+    void onCheckedRadioQuick2();
+    void onCheckedRadioQuick3();
+    void onCheckedRadioQuick4();
+
+    void resetSettings();
+    void loadSettings();
+
+signals:
+    void defaultParamStateChanged(Qt::CheckState state);
 
 private:
     Ui::Settings *ui;
+    QSettings *ayarR;
 
     int spinFValue;
     int spinKValue;

@@ -6,6 +6,8 @@ About::About(QWidget *parent) :
     ui(new Ui::About)
 {
     ui->setupUi(this);
+    setWindowTitle("Hakkinda");
+    setWindowIcon(QIcon(":/images/images/info-button.png"));
 }
 
 About::~About()

@@ -6,7 +6,9 @@
 #include <QProcess>
 #include <QSettings>
 #include <QSystemTrayIcon>
+#include <QMenu>
 #include "settings.h"
+#include "about.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,7 +19,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QStringList, QWidget *parent = 0);
     ~MainWindow();
 
 protected:
@@ -32,25 +34,34 @@ public slots:
     void handleState();
 
     void onActionAyarlar();
+    void onActionAbout();
+
+    void iconActivated(QSystemTrayIcon::ActivationReason reason);
+
+    void onDefaultParamCheckState(Qt::CheckState state);
 
 private:
     Ui::MainWindow *ui;
 
     QTemporaryDir *tmpDir;
+    QSettings *settings;
 
-    QSystemTrayIcon trayIcon;
+    QSystemTrayIcon *trayIcon;
     QMenu *trayMenu;
 
-    QAction *minimizeAction;
-    QAction *maximizeAction;
-    QAction *quitAction;
-    QAction *restoreAction;
+    QAction *hideAction;
+    QAction *showAction;
+    QAction *closeAction;
+    QAction *startAction;
+    QAction *stopAction;
+    QAction *settingsAction;
 
     QProcess *proc;
 
     QStringList args;
 
-    Settings ayarlar;
+    Settings *ayarlar;
+    About hakkinda;
 };
 
 #endif // MAINWINDOW_H

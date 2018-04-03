@@ -11,4 +11,11 @@
         <file>GBDPI/x86_64/WinDivert.dll</file>
         <file>GBDPI/x86_64/WinDivert64.sys</file>
     </qresource>
+    <qresource prefix="/images">
+        <file>images/info-button.png</file>
+        <file>images/play-button.png</file>
+        <file>images/settings-gears-button.png</file>
+        <file>images/stop-button.png</file>
+        <file>images/icon.ico</file>
+    </qresource>
 </RCC>

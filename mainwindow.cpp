@@ -10,20 +10,76 @@
 #include <memory>
 #include <Windows.h>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setWindowTitle("GoodByeDPI için GUI");
+    setWindowIcon(QIcon(":/images/images/icon.ico"));
 
-    QSettings settings("HexOpenSource", "GBDPI-GUI");
+    qDebug() << arguments.at(1);
+
+    //Maybe I could choose better variable names :)
+    ayarlar = new Settings();
+    settings = new QSettings("HexOpenSource", "GBDPI-GUI");
+
+    //Creating trayIcon and menu
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon(":/images/images/icon.ico"));
+    trayIcon->setToolTip("GUIForGoodByeDPI by hex4d0r");
+
+    trayMenu = new QMenu(this);
+    auto& traymn = trayMenu;
+
+    hideAction = new QAction("Gizle", this);
+    showAction = new QAction("Goster", this);
+    closeAction = new QAction("Cikis", this);
+    startAction = new QAction(QIcon(":/images/images/play-button.png"), "Baslat", this);
+    stopAction = new QAction(QIcon(":/images/images/stop-button.png"), "Durdur", this);
+    settingsAction = new QAction(QIcon(":/images/images/settings-gears-button.png"), "Ayarlar", this);
+
+    connect(startAction, &QAction::triggered, this, &MainWindow::procStart);
+    connect(stopAction, &QAction::triggered, this, &MainWindow::procStop);
+    connect(closeAction, &QAction::triggered, this, &MainWindow::close);
+    connect(hideAction, &QAction::triggered, [this, traymn](){
+        this->hide();
+        traymn->actions().at(5)->setEnabled(false);
+        traymn->actions().at(4)->setEnabled(true);
+    });
+    connect(settingsAction, &QAction::triggered, this, &MainWindow::onActionAyarlar);
+    connect(showAction, &QAction::triggered, [this, traymn](){
+        this->show();
+        traymn->actions().at(5)->setEnabled(true);
+        traymn->actions().at(4)->setEnabled(false);
+    });
+
+    QList<QAction*> actionList;
+    actionList << startAction << stopAction << settingsAction << showAction << hideAction << closeAction;
+
+    trayMenu->addActions(actionList);
+    trayMenu->insertSeparator(showAction);
+
+    trayIcon->setContextMenu(trayMenu);
+    trayIcon->show();
+
+    trayMenu->actions().at(4)->setEnabled(false);
+    trayMenu->actions().at(1)->setEnabled(false);
 
     connect(ui->actionAyarlar, &QAction::triggered, this, &MainWindow::onActionAyarlar);
+    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onActionAbout);
 
+    //Checking if default parameters enabled or not due to enable/disable parameters combo box.
+    if(!settings->value("Parametre/defaultParam").toBool())
+    {
+        ui->comboParametre->setEnabled(false);
+    }
+
+    //Capturing state of default parameters checkbox for enable/disable parameters combo box.
+    connect(ayarlar, &Settings::defaultParamStateChanged, this, &MainWindow::onDefaultParamCheckState);
 
     tmpDir = new QTemporaryDir();
-
+    //PARAMETRE DUZENLE SILENT parametresini unutma procstart calistiginda oku parametreleri
     connect(ui->btnStart, &QPushButton::clicked, this, &MainWindow::procStart);
     connect(ui->btnStop, &QPushButton::clicked, this, &MainWindow::procStop);
 
@@ -54,7 +110,22 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    ayarlar.close();
+    ayarlar->ayarKayit();
+    qDebug() << settings->value("System/systemTray");
+    if(settings->value("System/systemTray").toString() == "true" && this->isVisible())
+    {
+        event->ignore();
+        this->hide();
+        trayMenu->actions().at(4)->setEnabled(true);
+        trayMenu->actions().at(5)->setEnabled(false);
+        QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
+
+        trayIcon->showMessage("GoodByeDPI icin GUI", "Calisiyor", icon, 4000);
+    }
+    else
+    {
+        ayarlar->close();
+    }
 }
 
 void MainWindow::procStart()
@@ -135,17 +206,44 @@ void MainWindow::handleState()
         ui->debugArea->appendPlainText("[-] Durduruldu");
         ui->btnStart->setEnabled(true);
         ui->btnStop->setEnabled(false);
+        trayMenu->actions().at(1)->setEnabled(false);
+        trayMenu->actions().at(0)->setEnabled(true);
     }
     else if(proc->state() == QProcess::Running)
     {
         ui->debugArea->appendPlainText("[+] Başlatıldı\n[+] PID:" + QString::number(proc->processId()));
         ui->btnStart->setEnabled(false);
         ui->btnStop->setEnabled(true);
+        trayMenu->actions().at(0)->setEnabled(false);
+        trayMenu->actions().at(1)->setEnabled(true);
     }
 }
 
 void MainWindow::onActionAyarlar()
 {
-    ayarlar.setWindowModality(Qt::WindowModal);
-    ayarlar.show();
+    ayarlar->setWindowModality(Qt::WindowModal);
+    ayarlar->show();
+}
+
+void MainWindow::onActionAbout()
+{
+    hakkinda.exec();
+}
+
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+
+}
+
+void MainWindow::onDefaultParamCheckState(Qt::CheckState state)
+{
+    if(state == Qt::Checked)
+    {
+        ui->comboParametre->setEnabled(true);
+    }
+    else
+    {
+        ui->comboParametre->setEnabled(false);
+    }
+
 }
