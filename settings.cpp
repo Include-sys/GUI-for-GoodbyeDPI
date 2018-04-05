@@ -35,102 +35,99 @@ Settings::Settings(QWidget *parent) :
     }
 
     //SIGNAL&SLOTS for parameters and inputs change
-    // TODO: Turn all Checkbox::clicked signals to CheckBox::stateChanged
+    // TODO: Turn all Checkbox::stateChanged signals to CheckBox::stateChanged
     connect(ui->checkDefaultParam, &QCheckBox::stateChanged, this, &Settings::onCheckedDefaultParam);
-    connect(ui->checkCustomParam, &QCheckBox::clicked, this, &Settings::onCheckedCustomParam);
-    connect(ui->checkQuickSettings, &QCheckBox::clicked, this, &Settings::onCheckedQuickSettings);
+    connect(ui->checkCustomParam, &QCheckBox::stateChanged, this, &Settings::onCheckedCustomParam);
+    connect(ui->checkQuickSettings, &QCheckBox::stateChanged, this, &Settings::onCheckedQuickSettings);
 
     connect(ui->spinF, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this, ayar](){
-        if(ui->checkF->isChecked()){
+        if(ui->checkF->checkState() == Qt::Checked){
             spinFValue = ui->spinF->value();
             ayar->setValue("Parametre/paramF", "-f " + QString::number(spinFValue));
         }
     });
     connect(ui->spinK, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this, ayar](){
-        if(ui->checkK->isChecked()){
+        if(ui->checkK->checkState() == Qt::Checked){
             spinKValue = ui->spinK->value();
             ayar->setValue("Parametre/paramK", "-k " + QString::number(spinKValue));
         }
     });
     connect(ui->spinE, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this, ayar](){
-        if(ui->checkE->isChecked()){
+        if(ui->checkE->checkState() == Qt::Checked){
             spinEValue = ui->spinE->value();
             ayar->setValue("Parametre/paramE", "-e " + QString::number(spinEValue));
         }
     });
     connect(ui->spinPort, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this, ayar](){
-        if(ui->checkPort->isChecked())
+        if(ui->checkPort->checkState() == Qt::Checked)
         {
             spinPortValue = ui->spinPort->value();
             ayar->setValue("Parametre/paramPort", "--port " + QString::number(spinPortValue));
         }
     });
     connect(ui->spinDnsPort, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this, ayar](){
-        if(ui->checkDnsPort->isChecked())
+        if(ui->checkDnsPort->checkState() == Qt::Checked)
         {
             spinDnsPortValue = ui->spinDnsPort->value();
             ayar->setValue("Parametre/paramDnsPort", "--dns-port " + QString::number(spinDnsPortValue));
-            //ayar->sync();
         }
     });
     connect(ui->spinDnsv6Port, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this, ayar](){
-        if(ui->checkDnsv6Port->isChecked())
+        if(ui->checkDnsv6Port->checkState() == Qt::Checked)
         {
             spinDnsv6PortValue = ui->spinDnsv6Port->value();
             ayar->setValue("Parametre/paramDnsv6Port", "--dnsv6-port " + QString::number(spinDnsv6PortValue));
-            //ayar->sync();
         }
     });
 
     connect(ui->lineIpId, &QLineEdit::textChanged, [this, ayar](){
-        if(ui->checkIpId->isChecked())
+        if(ui->checkIpId->checkState() == Qt::Checked)
         {
             lineIpIdValue = ui->lineIpId->text();
             ayar->setValue("Parametre/paramIpId", "--ip-id " + lineIpIdValue);
-            //ayar->sync();
         }
     });
     connect(ui->lineDnsAddr, &QLineEdit::textChanged, [this, ayar](){
-        if(ui->checkDnsAddr->isChecked())
+        if(ui->checkDnsAddr->checkState() == Qt::Checked)
         {
             lineDnsAddrValue = ui->lineDnsAddr->text();
             ayar->setValue("Parametre/paramDnsAddr", "--dns-addr " + lineDnsAddrValue);
-            //ayar->sync();
         }
     });
     connect(ui->lineDnsv6Addr, &QLineEdit::textChanged, [this, ayar](){
-        if(ui->checkDnsv6Addr->isChecked())
+        if(ui->checkDnsv6Addr->checkState() == Qt::Checked)
         {
             lineDnsv6AddrValue = ui->lineDnsv6Addr->text();
+            qDebug() << "1: " + lineDnsv6AddrValue;
             ayar->setValue("Parametre/paramDnsv6Addr", "--dnsv6-addr " + lineDnsv6AddrValue);
-            //ayar->sync();
         }
     });
 
-    connect(ui->checkP, &QCheckBox::clicked, this, &Settings::onCheckedP);
-    connect(ui->checkR, &QCheckBox::clicked, this, &Settings::onCheckedR);
-    connect(ui->checkS, &QCheckBox::clicked, this, &Settings::onCheckedS);
-    connect(ui->checkM, &QCheckBox::clicked, this, &Settings::onCheckedM);
-    connect(ui->checkF, &QCheckBox::clicked, this, &Settings::onCheckedF);
-    connect(ui->checkK, &QCheckBox::clicked, this, &Settings::onCheckedK);
-    connect(ui->checkN, &QCheckBox::clicked, this, &Settings::onCheckedN);
-    connect(ui->checkE, &QCheckBox::clicked, this, &Settings::onCheckedE);
-    connect(ui->checkA, &QCheckBox::clicked, this, &Settings::onCheckedA);
-    connect(ui->checkW, &QCheckBox::clicked, this, &Settings::onCheckedW);
-    connect(ui->checkPort, &QCheckBox::clicked, this, &Settings::onCheckedPort);
-    connect(ui->checkIpId, &QCheckBox::clicked, this, &Settings::onCheckedIpId);
-    connect(ui->checkDnsAddr, &QCheckBox::clicked, this, &Settings::onCheckedDnsAddr);
-    connect(ui->checkDnsPort, &QCheckBox::clicked, this, &Settings::onCheckedDnsPort);
-    connect(ui->checkDnsv6Addr, &QCheckBox::clicked, this, &Settings::onCheckedDnsv6Addr);
-    connect(ui->checkDnsv6Port, &QCheckBox::clicked, this, &Settings::onCheckedDnsv6Port);
+    connect(ui->checkP, &QCheckBox::stateChanged, this, &Settings::onCheckedP);
+    connect(ui->checkR, &QCheckBox::stateChanged, this, &Settings::onCheckedR);
+    connect(ui->checkS, &QCheckBox::stateChanged, this, &Settings::onCheckedS);
+    connect(ui->checkM, &QCheckBox::stateChanged, this, &Settings::onCheckedM);
+    connect(ui->checkF, &QCheckBox::stateChanged, this, &Settings::onCheckedF);
+    connect(ui->checkK, &QCheckBox::stateChanged, this, &Settings::onCheckedK);
+    connect(ui->checkN, &QCheckBox::stateChanged, this, &Settings::onCheckedN);
+    connect(ui->checkE, &QCheckBox::stateChanged, this, &Settings::onCheckedE);
+    connect(ui->checkA, &QCheckBox::stateChanged, this, &Settings::onCheckedA);
+    connect(ui->checkW, &QCheckBox::stateChanged, this, &Settings::onCheckedW);
+    connect(ui->checkPort, &QCheckBox::stateChanged, this, &Settings::onCheckedPort);
+    connect(ui->checkIpId, &QCheckBox::stateChanged, this, &Settings::onCheckedIpId);
+    connect(ui->checkDnsAddr, &QCheckBox::stateChanged, this, &Settings::onCheckedDnsAddr);
+    connect(ui->checkDnsPort, &QCheckBox::stateChanged, this, &Settings::onCheckedDnsPort);
+    connect(ui->checkDnsv6Addr, &QCheckBox::stateChanged, this, &Settings::onCheckedDnsv6Addr);
+    connect(ui->checkDnsv6Port, &QCheckBox::stateChanged, this, &Settings::onCheckedDnsv6Port);
 
     connect(ui->radioQuick1, &QRadioButton::clicked, this, &Settings::onCheckedRadioQuick1);
     connect(ui->radioQuick2, &QRadioButton::clicked, this, &Settings::onCheckedRadioQuick2);
     connect(ui->radioQuick3, &QRadioButton::clicked, this, &Settings::onCheckedRadioQuick3);
     connect(ui->radioQuick4, &QRadioButton::clicked, this, &Settings::onCheckedRadioQuick4);
 
-    connect(ui->startupBox, &QCheckBox::clicked, this, &Settings::onCheckedStartup);
-    connect(ui->trayBox, &QCheckBox::clicked, this, &Settings::onCheckedSystemTray);
+    connect(ui->startupBox, &QCheckBox::stateChanged, this, &Settings::onCheckedStartup);
+    connect(ui->trayBox, &QCheckBox::stateChanged, this, &Settings::onCheckedSystemTray);
+    connect(ui->notificationBox, &QCheckBox::stateChanged, this, &Settings::onCheckedNotification);
 
     loadSettings();
 }
@@ -140,14 +137,23 @@ Settings::~Settings()
     delete ui;
 }
 
-void Settings::ayarKayit()
+void Settings::closeEvent(QCloseEvent *event)
 {
-    ayarR->sync();
+    if(this->isVisible() || this->isTopLevel())
+    {
+        event->ignore();
+        this->hide();
+    }
+    else
+    {
+    }
+
+    emit defaultParamStateChanged(ui->checkDefaultParam->checkState());
 }
 
 void Settings::onCheckedDefaultParam()
 {
-    if(ui->checkDefaultParam->isChecked())
+    if(ui->checkDefaultParam->checkState() == Qt::Checked)
     {
         ui->paramBox->setEnabled(false);
         ui->checkCustomParam->setCheckState(Qt::Unchecked);
@@ -165,24 +171,31 @@ void Settings::onCheckedDefaultParam()
 
 void Settings::onCheckedCustomParam()
 {
-    if(ui->checkCustomParam->isChecked())
+    if(ui->checkCustomParam->checkState() == Qt::Checked)
     {
         ui->checkDefaultParam->setChecked(Qt::Unchecked);
         ui->paramBox->setEnabled(true);
         ayarR->setValue("Parametre/customParam", true);
-        ayarR->setValue("Parametre/quickSettings", false);
-        if(ayarR->value("quickSettings").toBool())  ayarR->setValue("Parametre/quickSettings", true);
+        if(ayarR->value("Parametre/quickSettings").toBool()){
+            ayarR->setValue("Parametre/quickSettings", true);
+        }
+        else
+        {
+            ayarR->setValue("Parametre/quickSettings", false);
+        }
         ayarR->setValue("Parametre/defaultParam", false);
     }
     else
     {
         ui->paramBox->setEnabled(false);
+        ayarR->setValue("Parametre/customParam", false);
     }
+    emit defaultParamStateChanged(ui->checkDefaultParam->checkState());
 }
 
 void Settings::onCheckedSystemTray()
 {
-    if(ui->trayBox->isChecked())
+    if(ui->trayBox->checkState() == Qt::Checked)
     {
         ayarR->setValue("System/systemTray", true);
     }
@@ -195,7 +208,7 @@ void Settings::onCheckedSystemTray()
 void Settings::onCheckedStartup()
 {
     QSettings startup("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-    if(ui->startupBox->isChecked())
+    if(ui->startupBox->checkState() == Qt::Checked)
     {
         QString appPath = QCoreApplication::applicationFilePath();
         appPath.replace("/", "\\");
@@ -211,7 +224,7 @@ void Settings::onCheckedStartup()
 
 void Settings::onCheckedSchedule()
 {
-    if(ui->scheduleBox->isChecked())
+    if(ui->scheduleBox->checkState() == Qt::Checked)
     {
         ayarR->setValue("System/systemSchedule", true);
         ayarR->setValue("System/systemScheduleStart", true);
@@ -224,9 +237,21 @@ void Settings::onCheckedSchedule()
     }
 }
 
+void Settings::onCheckedNotification()
+{
+    if(ui->notificationBox->checkState() == Qt::Checked)
+    {
+        ayarR->setValue("System/disableNotifications", true);
+    }
+    else
+    {
+        ayarR->setValue("System/disableNotifications", false);
+    }
+}
+
 void Settings::onCheckedQuickSettings()
 {
-    if(ui->checkQuickSettings->isChecked())
+    if(ui->checkQuickSettings->checkState() == Qt::Checked)
     {
         ui->groupQuickSettings->setEnabled(true);
         ui->param1->setEnabled(false);
@@ -234,19 +259,27 @@ void Settings::onCheckedQuickSettings()
         ayarR->setValue("Parametre/customParam", true);
         ayarR->setValue("Parametre/defaultParam", false);
 
-        emit ui->radioQuick1->clicked(true);
+        if(ayarR->value("Parametre/paramQuick").toString() == "-1")
+            ui->radioQuick1->setChecked(true);
+        if(ayarR->value("Parametre/paramQuick").toString() == "-2")
+            ui->radioQuick2->setChecked(true);
+        if(ayarR->value("Parametre/paramQuick").toString() == "-3")
+            ui->radioQuick3->setChecked(true);
+        if(ayarR->value("Parametre/paramQuick").toString() == "-4")
+            ui->radioQuick4->setChecked(true);
     }
     else
     {
         ui->groupQuickSettings->setEnabled(false);
         ui->param1->setEnabled(true);
-        ayarR->setValue("Parametre/paramQuick", false);
+        ayarR->setValue("Parametre/quickSettings", false);
     }
+    emit defaultParamStateChanged(ui->checkDefaultParam->checkState());
 }
 
 void Settings::onCheckedP()
 {
-    if(ui->checkP->isChecked())
+    if(ui->checkP->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramP", true);
     }
@@ -258,7 +291,7 @@ void Settings::onCheckedP()
 
 void Settings::onCheckedR()
 {
-    if(ui->checkP->isChecked())
+    if(ui->checkR->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramR", true);
     }
@@ -270,7 +303,7 @@ void Settings::onCheckedR()
 
 void Settings::onCheckedS()
 {
-    if(ui->checkS->isChecked())
+    if(ui->checkS->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramS", true);
     }
@@ -282,7 +315,7 @@ void Settings::onCheckedS()
 
 void Settings::onCheckedM()
 {
-    if(ui->checkM->isChecked())
+    if(ui->checkM->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramM", true);
     }
@@ -294,7 +327,7 @@ void Settings::onCheckedM()
 
 void Settings::onCheckedF()
 {
-    if(ui->checkF->isChecked())
+    if(ui->checkF->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramF", "-f " + QString::number(spinFValue));
     }
@@ -306,7 +339,7 @@ void Settings::onCheckedF()
 
 void Settings::onCheckedK()
 {
-    if(ui->checkK->isChecked())
+    if(ui->checkK->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramK", "-k " + QString::number(spinKValue));
     }
@@ -318,7 +351,7 @@ void Settings::onCheckedK()
 
 void Settings::onCheckedN()
 {
-    if(ui->checkN->isChecked())
+    if(ui->checkN->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramN", true);
     }
@@ -330,7 +363,7 @@ void Settings::onCheckedN()
 
 void Settings::onCheckedE()
 {
-    if(ui->checkE->isChecked())
+    if(ui->checkE->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramE", "-e " + QString::number(spinEValue));
     }
@@ -342,7 +375,7 @@ void Settings::onCheckedE()
 
 void Settings::onCheckedA()
 {
-    if(ui->checkA->isChecked())
+    if(ui->checkA->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramA", true);
     }
@@ -354,7 +387,7 @@ void Settings::onCheckedA()
 
 void Settings::onCheckedW()
 {
-    if(ui->checkW->isChecked())
+    if(ui->checkW->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramW", true);
     }
@@ -366,7 +399,7 @@ void Settings::onCheckedW()
 
 void Settings::onCheckedPort()
 {
-    if(ui->checkPort->isChecked())
+    if(ui->checkPort->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramPort", "--port " + QString::number(spinPortValue));
     }
@@ -378,7 +411,7 @@ void Settings::onCheckedPort()
 
 void Settings::onCheckedIpId()
 {
-    if(ui->checkIpId->isChecked())
+    if(ui->checkIpId->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramIpId", "--ip-id " + lineIpIdValue);
     }
@@ -390,7 +423,7 @@ void Settings::onCheckedIpId()
 
 void Settings::onCheckedDnsAddr()
 {
-    if(ui->checkDnsAddr->isChecked())
+    if(ui->checkDnsAddr->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramDnsAddr", "--dns-addr " + lineDnsAddrValue);
     }
@@ -402,7 +435,7 @@ void Settings::onCheckedDnsAddr()
 
 void Settings::onCheckedDnsPort()
 {
-    if(ui->checkDnsPort->isChecked())
+    if(ui->checkDnsPort->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramDnsPort", "--dns-port " + QString::number(spinDnsPortValue));
     }
@@ -414,7 +447,7 @@ void Settings::onCheckedDnsPort()
 
 void Settings::onCheckedDnsv6Addr()
 {
-    if(ui->checkDnsv6Addr->isChecked())
+    if(ui->checkDnsv6Addr->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramDnsv6Addr", "--dnsv6-addr " + lineDnsv6AddrValue);
     }
@@ -426,7 +459,7 @@ void Settings::onCheckedDnsv6Addr()
 
 void Settings::onCheckedDnsv6Port()
 {
-    if(ui->checkDnsv6Port->isChecked())
+    if(ui->checkDnsv6Port->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramDnsv6Port", "--dnsv6-port " + QString::number(spinDnsv6PortValue));
     }
@@ -438,7 +471,7 @@ void Settings::onCheckedDnsv6Port()
 
 void Settings::onCheckedBlacklist()
 {
-    if(ui->checkBlacklist->isChecked())
+    if(ui->checkBlacklist->checkState() == Qt::Checked)
     {
         ayarR->setValue("Parametre/paramBlacklist", true);
     }
@@ -499,6 +532,7 @@ void Settings::resetSettings()
     ayarR->setValue("systemTray", true);
     ayarR->setValue("systemStartup", false);
     ayarR->setValue("systemSchedule", false);
+    ayarR->setValue("disableNotifications", false);
     ayarR->endGroup();
 }
 
@@ -512,8 +546,8 @@ void Settings::resetSettings()
  */
 void Settings::loadSettings()
 {
-    ayarR->beginGroup("Parametre");
-    if(ayarR->value("defaultParam").toBool())
+    //ayarR->beginGroup("Parametre");
+    if(ayarR->value("Parametre/defaultParam").toBool())
     {
         ui->checkDefaultParam->setChecked(true);
         ui->paramBox->setEnabled(false);
@@ -523,11 +557,11 @@ void Settings::loadSettings()
         ui->checkDefaultParam->setChecked(false);
     }
 
-    if(ayarR->value("customParam").toBool())
+    if(ayarR->value("Parametre/customParam").toBool())
     {
          ui->checkCustomParam->setChecked(true);
          ui->paramBox->setEnabled(true);
-         if(ayarR->value("quickSettings").toBool())
+         if(ayarR->value("Parametre/quickSettings").toBool())
          {
              ui->checkQuickSettings->setEnabled(true);
              ui->param1->setEnabled(false);
@@ -539,7 +573,7 @@ void Settings::loadSettings()
         ui->paramBox->setEnabled(false);
     }
 
-    if(ayarR->value("quickSettings").toBool())
+    if(ayarR->value("Parametre/quickSettings").toBool())
     {
         ui->checkQuickSettings->setChecked(true);
         ui->groupQuickSettings->setEnabled(true);
@@ -552,7 +586,20 @@ void Settings::loadSettings()
         ui->groupQuickSettings->setEnabled(false);
     }
 
-    if(ayarR->value("paramP").toBool())
+    if(ayarR->value("Parametre/paramQuick").toString() != "false")
+    {
+        if(ayarR->value("Parametre/paramQuick").toString() == "-1")
+            ui->radioQuick1->setChecked(true);
+        else if(ayarR->value("Parametre/paramQuick").toString() == "-2")
+            ui->radioQuick2->setChecked(true);
+        else if(ayarR->value("Parametre/paramQuick").toString() == "-3")
+            ui->radioQuick3->setChecked(true);
+        else if(ayarR->value("Parametre/paramQuick").toString() == "-4")
+            ui->radioQuick4->setChecked(true);
+
+    }
+
+    if(ayarR->value("Parametre/paramP").toBool())
     {
         ui->checkP->setChecked(true);
     }
@@ -561,7 +608,7 @@ void Settings::loadSettings()
         ui->checkP->setChecked(false);
     }
 
-    if(ayarR->value("paramR").toBool())
+    if(ayarR->value("Parametre/paramR").toBool())
     {
         ui->checkR->setChecked(true);
     }
@@ -570,7 +617,7 @@ void Settings::loadSettings()
         ui->checkR->setChecked(false);
     }
 
-    if(ayarR->value("paramS").toBool())
+    if(ayarR->value("Parametre/paramS").toBool())
     {
         ui->checkS->setChecked(true);
     }
@@ -579,10 +626,19 @@ void Settings::loadSettings()
         ui->checkS->setChecked(false);
     }
 
-    if(ayarR->value("paramF").toString() != "false")
+    if(ayarR->value("Parametre/paramM").toBool())
+    {
+        ui->checkM->setChecked(true);
+    }
+    else
+    {
+        ui->checkM->setChecked(false);
+    }
+
+    if(ayarR->value("Parametre/paramF").toString() != "false")
     {
         ui->checkF->setChecked(true);
-        QString tmp = ayarR->value("paramF").toString();
+        QString tmp = ayarR->value("Parametre/paramF").toString();
         QStringList list = tmp.split(" ");
 
         ui->spinF->setValue(list.at(1).toInt());
@@ -593,10 +649,10 @@ void Settings::loadSettings()
         ui->checkF->setChecked(false);
     }
 
-    if(ayarR->value("paramK").toString() != "false")
+    if(ayarR->value("Parametre/paramK").toString() != "false")
     {
         ui->checkK->setChecked(true);
-        QString tmp = ayarR->value("paramK").toString();
+        QString tmp = ayarR->value("Parametre/paramK").toString();
         QStringList list = tmp.split(" ");
 
         ui->spinK->setValue(list.at(1).toInt());
@@ -607,7 +663,7 @@ void Settings::loadSettings()
         ui->checkF->setChecked(false);
     }
 
-    if(ayarR->value("paramN").toBool())
+    if(ayarR->value("Parametre/paramN").toBool())
     {
         ui->checkN->setChecked(true);
     }
@@ -616,10 +672,10 @@ void Settings::loadSettings()
         ui->checkN->setChecked(false);
     }
 
-    if(ayarR->value("paramE").toString() != "false")
+    if(ayarR->value("Parametre/paramE").toString() != "false")
     {
         ui->checkE->setChecked(true);
-        QString tmp = ayarR->value("paramE").toString();
+        QString tmp = ayarR->value("Parametre/paramE").toString();
         QStringList list = tmp.split(" ");
 
         ui->spinE->setValue(list.at(1).toInt());
@@ -630,7 +686,7 @@ void Settings::loadSettings()
         ui->checkE->setChecked(false);
     }
 
-    if(ayarR->value("paramA").toBool())
+    if(ayarR->value("Parametre/paramA").toBool())
     {
         ui->checkA->setChecked(true);
     }
@@ -639,7 +695,7 @@ void Settings::loadSettings()
         ui->checkA->setChecked(false);
     }
 
-    if(ayarR->value("paramW").toBool())
+    if(ayarR->value("Parametre/paramW").toBool())
     {
         ui->checkW->setChecked(true);
     }
@@ -648,10 +704,10 @@ void Settings::loadSettings()
         ui->checkW->setChecked(false);
     }
 
-    if(ayarR->value("paramPort").toString() != "false")
+    if(ayarR->value("Parametre/paramPort").toString() != "false")
     {
         ui->checkPort->setChecked(true);
-        QString tmp = ayarR->value("paramPort").toString();
+        QString tmp = ayarR->value("Parametre/paramPort").toString();
         QStringList list = tmp.split(" ");
 
         ui->spinPort->setValue(list.at(1).toInt());
@@ -662,10 +718,10 @@ void Settings::loadSettings()
         ui->checkPort->setChecked(false);
     }
 
-    if(ayarR->value("paramIpId").toString() != "false")
+    if(ayarR->value("Parametre/paramIpId").toString() != "false")
     {
         ui->checkIpId->setChecked(true);
-        QString tmp = ayarR->value("paramIpId").toString();
+        QString tmp = ayarR->value("Parametre/paramIpId").toString();
         QStringList list = tmp.split(" ");
 
         ui->lineIpId->setText(list.at(1));
@@ -676,10 +732,10 @@ void Settings::loadSettings()
         ui->checkIpId->setChecked(false);
     }
 
-    if(ayarR->value("paramDnsAddr").toString() != "false")
+    if(ayarR->value("Parametre/paramDnsAddr").toString() != "false")
     {
         ui->checkDnsAddr->setChecked(true);
-        QString tmp = ayarR->value("paramDnsAddr").toString();
+        QString tmp = ayarR->value("Parametre/paramDnsAddr").toString();
         QStringList list = tmp.split(" ");
 
         ui->lineDnsAddr->setText(list.at(1));
@@ -690,10 +746,10 @@ void Settings::loadSettings()
         ui->checkDnsAddr->setChecked(false);
     }
 
-    if(ayarR->value("paramDnsPort").toString() != "false")
+    if(ayarR->value("Parametre/paramDnsPort").toString() != "false")
     {
         ui->checkDnsPort->setChecked(true);
-        QString tmp = ayarR->value("paramDnsPort").toString();
+        QString tmp = ayarR->value("Parametre/paramDnsPort").toString();
         QStringList list = tmp.split(" ");
 
         ui->spinDnsPort->setValue(list.at(1).toInt());
@@ -704,24 +760,25 @@ void Settings::loadSettings()
         ui->checkDnsPort->setChecked(false);
     }
 
-    if(ayarR->value("paramDnsv6Addr").toString() != "false")
+    if(ayarR->value("Parametre/paramDnsv6Addr").toString() != "false")
     {
         ui->checkDnsv6Addr->setChecked(true);
-        QString tmp = ayarR->value("paramDnsv6Addr").toString();
+        QString tmp = ayarR->value("Parametre/paramDnsv6Addr").toString();
         QStringList list = tmp.split(" ");
 
         ui->lineDnsv6Addr->setText(list.at(1));
         lineDnsv6AddrValue = list.at(1);
+        qDebug() << lineDnsv6AddrValue;
     }
     else
     {
         ui->checkDnsv6Addr->setChecked(false);
     }
 
-    if(ayarR->value("paramDnsv6Port").toString() != "false")
+    if(ayarR->value("Parametre/paramDnsv6Port").toString() != "false")
     {
         ui->checkDnsv6Port->setChecked(true);
-        QString tmp = ayarR->value("paramDnsv6Port").toString();
+        QString tmp = ayarR->value("Parametre/paramDnsv6Port").toString();
         QStringList list = tmp.split(" ");
 
         ui->spinDnsv6Port->setValue(list.at(1).toInt());
@@ -732,7 +789,7 @@ void Settings::loadSettings()
         ui->checkDnsv6Port->setChecked(false);
     }
 
-    if(ayarR->value("paramBlacklist").toBool())
+    if(ayarR->value("Parametre/paramBlacklist").toBool())
     {
         ui->checkBlacklist->setChecked(true);
     }
@@ -741,5 +798,30 @@ void Settings::loadSettings()
         ui->checkBlacklist->setChecked(false);
     }
 
-    ayarR->endGroup();
+    if(ayarR->value("System/systemStartup").toBool())
+    {
+        ui->startupBox->setChecked(true);
+    }
+    else
+    {
+        ui->startupBox->setChecked(false);
+    }
+
+    if(ayarR->value("System/systemTray").toBool())
+    {
+        ui->trayBox->setChecked(true);
+    }
+    else
+    {
+        ui->trayBox->setChecked(false);
+    }
+
+    if(ayarR->value("System/disableNotifications").toBool())
+    {
+        ui->notificationBox->setChecked(false);
+    }
+    else
+    {
+        ui->notificationBox->setChecked(true);
+    }
 }

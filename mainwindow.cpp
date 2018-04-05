@@ -12,6 +12,18 @@
 
 MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     QMainWindow(parent),
+    ayarlar(new Settings()),
+    settings(new QSettings("HexOpenSource", "GBDPI-GUI", this)),
+    trayIcon(new QSystemTrayIcon(this)),
+    trayMenu(new QMenu(this)),
+    hideAction(new QAction("Gizle", this)),
+    showAction(new QAction("Göster", this)),
+    closeAction(new QAction("Çıkış", this)),
+    startAction(new QAction(QIcon(":/images/images/play-button.png"), "Başlat", this)),
+    stopAction(new QAction(QIcon(":/images/images/stop-button.png"), "Durdur", this)),
+    settingsAction(new QAction(QIcon(":/images/images/settings-gears-button.png"), "Ayarlar", this)),
+    tmpDir(new QTemporaryDir()),
+    proc(new QProcess(this)),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -20,28 +32,20 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
 
     qDebug() << arguments.at(1);
 
-    //Maybe I could choose better variable names :)
-    ayarlar = new Settings();
-    settings = new QSettings("HexOpenSource", "GBDPI-GUI");
-
-    //Creating trayIcon and menu
-    trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon(":/images/images/icon.ico"));
     trayIcon->setToolTip("GUIForGoodByeDPI by hex4d0r");
 
-    trayMenu = new QMenu(this);
+    ui->labelParameters->setWordWrap(true);
+
+    //For using lambda functions with traymenu
     auto& traymn = trayMenu;
 
-    hideAction = new QAction("Gizle", this);
-    showAction = new QAction("Goster", this);
-    closeAction = new QAction("Cikis", this);
-    startAction = new QAction(QIcon(":/images/images/play-button.png"), "Baslat", this);
-    stopAction = new QAction(QIcon(":/images/images/stop-button.png"), "Durdur", this);
-    settingsAction = new QAction(QIcon(":/images/images/settings-gears-button.png"), "Ayarlar", this);
-
+    //Setting traymenu actions.
     connect(startAction, &QAction::triggered, this, &MainWindow::procStart);
     connect(stopAction, &QAction::triggered, this, &MainWindow::procStop);
-    connect(closeAction, &QAction::triggered, this, &MainWindow::close);
+    connect(closeAction, &QAction::triggered, [this](){
+        QCoreApplication::quit();
+    });
     connect(hideAction, &QAction::triggered, [this, traymn](){
         this->hide();
         traymn->actions().at(5)->setEnabled(false);
@@ -62,7 +66,7 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
 
     trayIcon->setContextMenu(trayMenu);
     trayIcon->show();
-
+    //Set false Stop and Hide actions
     trayMenu->actions().at(4)->setEnabled(false);
     trayMenu->actions().at(1)->setEnabled(false);
 
@@ -76,30 +80,34 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     }
 
     //Capturing state of default parameters checkbox for enable/disable parameters combo box.
-    connect(ayarlar, &Settings::defaultParamStateChanged, this, &MainWindow::onDefaultParamCheckState);
+    connect(ayarlar, &Settings::defaultParamStateChanged, this, &MainWindow::onDefaultParamCheckState, Qt::QueuedConnection);
 
-    tmpDir = new QTemporaryDir();
     //PARAMETRE DUZENLE SILENT parametresini unutma procstart calistiginda oku parametreleri
     connect(ui->btnStart, &QPushButton::clicked, this, &MainWindow::procStart);
     connect(ui->btnStop, &QPushButton::clicked, this, &MainWindow::procStop);
+    connect(proc, &QProcess::stateChanged, this, &MainWindow::handleState);
 
     args << "-1 --blacklist blacklist.txt" <<
             "-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt" <<
             "-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253" <<
             "-1 -a -m --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253";
 
-    ui->comboParametre->addItems(args);
+    ui->comboParametre->addItem("russia_blacklist", QVariant("-1 --blacklist blacklist.txt"));
+    ui->comboParametre->addItem("russia_blacklist_dnsredir", QVariant("-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt"));
+    ui->comboParametre->addItem("all", QVariant("-1"));
+    ui->comboParametre->addItem("all_dnsredir", QVariant("-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253"));
+    ui->comboParametre->addItem("all_dnsredir_hardcore", QVariant("-1 -a -m --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253"));
 
     ui->btnStop->setEnabled(false);
 
-    proc = new QProcess(this);
-
+    //Capturing ouput of goodbyedpi.exe but doesn't work, because goodbyedpi.exe doesn't flush stdout. Author need to add fflush(stdout) to aftery every printf() function.
     connect(proc, &QProcess::readyReadStandardOutput, this, &MainWindow::processOutput);
     connect(proc, &QProcess::readyReadStandardError, this, &MainWindow::processError);
-    connect(proc, &QProcess::stateChanged, this, &MainWindow::handleState);
 
-    //proc->setReadChannel(QProcess::StandardOutput);
-
+    if(settings->value("Parametre/defaultParam").toBool())
+        prepareParameters(true);
+    else
+        prepareParameters(false);
 }
 
 MainWindow::~MainWindow()
@@ -110,17 +118,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    ayarlar->ayarKayit();
-    qDebug() << settings->value("System/systemTray");
-    if(settings->value("System/systemTray").toString() == "true" && this->isVisible())
+    qDebug() << settings->value("System/systemTray").toString();
+    if(settings->value("System/systemTray").toString() == "true" && (this->isTopLevel() || this->isVisible()))
     {
         event->ignore();
         this->hide();
         trayMenu->actions().at(4)->setEnabled(true);
         trayMenu->actions().at(5)->setEnabled(false);
-        QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
 
-        trayIcon->showMessage("GoodByeDPI icin GUI", "Calisiyor", icon, 4000);
+        if(!settings->value("System/disableNotifications").toBool())
+        {
+            qDebug() << "Message will shown";
+            QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
+            trayIcon->showMessage("GoodByeDPI GUI", "Arka planda çalışıyor.", icon, 4000);
+        }
     }
     else
     {
@@ -221,7 +232,6 @@ void MainWindow::handleState()
 
 void MainWindow::onActionAyarlar()
 {
-    ayarlar->setWindowModality(Qt::WindowModal);
     ayarlar->show();
 }
 
@@ -230,20 +240,130 @@ void MainWindow::onActionAbout()
     hakkinda.exec();
 }
 
-void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
-{
-
-}
-
 void MainWindow::onDefaultParamCheckState(Qt::CheckState state)
 {
     if(state == Qt::Checked)
     {
         ui->comboParametre->setEnabled(true);
+        prepareParameters(true);
     }
     else
     {
-        ui->comboParametre->setEnabled(false);
+       ui->comboParametre->setEnabled(false);
+       prepareParameters(false);
+    }
+
+}
+
+QStringList MainWindow::prepareParameters(bool isComboParametreEnabled)
+{
+    QStringList defaultparameters;
+    QStringList customParameters;
+    QStringList quickParameters;
+    QStringList param2Box;
+    QStringList param1Box;
+
+    //PARAMBOX1
+    if(settings->value("Parametre/paramP").toBool())
+        param1Box << "-p";
+    if(settings->value("Parametre/paramR").toBool())
+        param1Box << "-r";
+    if(settings->value("Parametre/paramS").toBool())
+        param1Box << "-s";
+    if(settings->value("Parametre/paramM").toBool())
+        param1Box << "-m";
+    if(settings->value("Parametre/paramF").toString() != "false")
+        param1Box << settings->value("Parametre/paramF").toString();
+    if(settings->value("Parametre/paramK").toString() != "false")
+        param1Box << settings->value("Parametre/paramK").toString();
+    if(settings->value("Parametre/paramN").toBool())
+        param1Box << "-n";
+    if(settings->value("Parametre/paramE").toString() != "false")
+        param1Box << settings->value("Parametre/paramE").toString();
+    if(settings->value("Parametre/paramA").toBool())
+        param1Box << "-a";
+    if(settings->value("Parametre/paramW").toBool())
+        param1Box << "-w";
+    if(settings->value("Parametre/paramPort").toString() != "false")
+        param1Box << settings->value("Parametre/paramPort").toString();
+    if(settings->value("Parametre/paramIpId").toString() != "false")
+        param1Box << settings->value("Parametre/paramIpId").toString();
+
+    //PARAMBOX2
+    if(settings->value("Parametre/paramDnsAddr").toString() != "false")
+        param2Box << settings->value("Parametre/paramDnsAddr").toString();
+    if(settings->value("Parametre/paramDnsPort").toString() != "false")
+        param2Box << settings->value("Parametre/paramDnsPort").toString();
+    if(settings->value("Parametre/paramDnsPort").toString() != "false")
+        param2Box << settings->value("Parametre/paramDnsPort").toString();
+    if(settings->value("Parametre/paramDnsv6Addr").toString() != "false")
+        param2Box << settings->value("Parametre/paramDnsv6Addr").toString();
+    if(settings->value("Parametre/paramDnsv6Port").toString() != "false")
+        param2Box << settings->value("Parametre/paramDnsv6Port").toString();
+    if(settings->value("Parametre/paramBlacklist").toString() != "false")
+        param2Box << "--blacklist blacklist.txt";
+
+    //QUICKSETTINGS
+    if(settings->value("Parametre/paramQuick").toString() == "-1")
+        quickParameters << "-p -r -s -f 2 -k 2 -n -e 2" << param2Box;
+    if(settings->value("Parametre/paramQuick").toString() == "-2")
+        quickParameters << "-p -r -s -f 2 -k 2 -n -e 40" << param2Box;
+    else if(settings->value("Parametre/paramQuick").toString() == "-3")
+        quickParameters << "-p -r -s -e 40" << param2Box;
+    else if(settings->value("Parametre/paramQuick").toString() == "-4")
+        quickParameters << "-p -r -s" << param2Box;
+
+    //DEFAULTPARAMETERS
+    switch (ui->comboParametre->currentIndex()) {
+    case 0:
+        defaultparameters << "-1 --blacklist blacklist.txt";
+        break;
+    case 1:
+        defaultparameters << "-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt";
+        break;
+    case 2:
+        defaultparameters << "-1";
+        break;
+    case 3:
+        defaultparameters << "-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253";
+        break;
+    case 4:
+        defaultparameters << "-1 -a -m --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253";
+    }
+
+    //CUSTOMPARAMETERS
+    customParameters << param1Box << param2Box;
+
+    //UPDATE Parameter Label
+    if(isComboParametreEnabled)
+    {
+        qDebug() << "defaultParam";
+        ui->labelParameters->setText("goodbyedpi.exe " + defaultparameters.join(" "));
+        return defaultparameters;
+    }
+    else if(settings->value("Parametre/customParam").toString() == "true" && settings->value("Parametre/quickSettings").toString() == "false")
+    {
+        qDebug() << "customParam";
+        ui->labelParameters->setText("goodbyedpi.exe " + customParameters.join(" "));
+        return customParameters;
+    }
+    else if(settings->value("Parametre/customParam").toString() == "false" && settings->value("Parametre/quickSettings").toString() == "false")
+    {
+        qDebug() << "noParam";
+        ui->labelParameters->setText("goodbyedpi.exe");
+        return QStringList();
+    }
+    else if(settings->value("Parametre/customParam").toString() == "true" && settings->value("Parametre/quickSettings").toString() == "true")
+    {
+        qDebug() << "noParam2";
+        ui->labelParameters->setText("goodbyedpi.exe");
+        return QStringList();
+    }
+    else
+    {
+        qDebug() << "quickParam";
+        ui->labelParameters->setText("goodbyedpi.exe " + quickParameters.join(" "));
+        return quickParameters;
     }
 
 }

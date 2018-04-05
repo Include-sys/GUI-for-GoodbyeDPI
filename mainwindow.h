@@ -36,9 +36,9 @@ public slots:
     void onActionAyarlar();
     void onActionAbout();
 
-    void iconActivated(QSystemTrayIcon::ActivationReason reason);
-
     void onDefaultParamCheckState(Qt::CheckState state);
+
+    QStringList prepareParameters(bool isComboParametreEnabled);
 
 private:
     Ui::MainWindow *ui;
@@ -62,6 +62,14 @@ private:
 
     Settings *ayarlar;
     About hakkinda;
+
+    enum ParameterList{
+        russia_blacklist,
+        russia_blacklist_dnsredir,
+        all,
+        all_dnsredir,
+        all_dnsredir_hardcore
+    };
 };
 
 #endif // MAINWINDOW_H

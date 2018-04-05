@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QSettings>
+#include <QCloseEvent>
 
 namespace Ui {
 class Settings;
@@ -18,12 +19,16 @@ public:
 
     void ayarKayit();
 
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 public slots:
     void onCheckedDefaultParam();
     void onCheckedCustomParam();
     void onCheckedSystemTray();
     void onCheckedStartup();
     void onCheckedSchedule();
+    void onCheckedNotification();
 
     void onCheckedQuickSettings();
 
@@ -55,6 +60,7 @@ public slots:
 
 signals:
     void defaultParamStateChanged(Qt::CheckState state);
+    void updateParameters();
 
 private:
     Ui::Settings *ui;

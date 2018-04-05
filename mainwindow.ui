@@ -42,6 +42,19 @@
        <item>
         <widget class="QComboBox" name="comboParametre"/>
        </item>
+       <item>
+        <widget class="QLabel" name="labelParameters">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::PlainText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>

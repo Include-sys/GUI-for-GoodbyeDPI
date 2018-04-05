@@ -543,7 +543,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QCheckBox" name="checkBox">
+        <widget class="QCheckBox" name="notificationBox">
          <property name="text">
           <string>Bildirimleri Kapat</string>
          </property>
