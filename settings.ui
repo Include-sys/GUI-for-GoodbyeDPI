@@ -479,7 +479,7 @@
        <item row="2" column="0">
         <widget class="QCheckBox" name="scheduleBox">
          <property name="text">
-          <string>Çalışma Saatleri Ayarla</string>
+          <string>Çalışma Saatleri Ayarla (Sonraki guncellemede gelecek.)</string>
          </property>
         </widget>
        </item>

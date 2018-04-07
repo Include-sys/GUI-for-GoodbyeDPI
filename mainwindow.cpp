@@ -30,8 +30,6 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     setWindowTitle("GoodByeDPI için GUI");
     setWindowIcon(QIcon(":/images/images/icon.ico"));
 
-    qDebug() << arguments.at(1);
-
     trayIcon->setIcon(QIcon(":/images/images/icon.ico"));
     trayIcon->setToolTip("GUIForGoodByeDPI by hex4d0r");
 
@@ -87,11 +85,6 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     connect(ui->btnStop, &QPushButton::clicked, this, &MainWindow::procStop);
     connect(proc, &QProcess::stateChanged, this, &MainWindow::handleState);
 
-    args << "-1 --blacklist blacklist.txt" <<
-            "-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt" <<
-            "-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253" <<
-            "-1 -a -m --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253";
-
     ui->comboParametre->addItem("russia_blacklist", QVariant("-1 --blacklist blacklist.txt"));
     ui->comboParametre->addItem("russia_blacklist_dnsredir", QVariant("-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt"));
     ui->comboParametre->addItem("all", QVariant("-1"));
@@ -108,6 +101,16 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
         prepareParameters(true);
     else
         prepareParameters(false);
+
+    //COKUYOR
+    if(!arguments.isEmpty())
+    {
+        if(arguments.at(1) == "-silent")
+        {
+            hideAction->setEnabled(false);
+            showAction->setEnabled(true);
+        }
+    }
 }
 
 MainWindow::~MainWindow()
@@ -337,31 +340,26 @@ QStringList MainWindow::prepareParameters(bool isComboParametreEnabled)
     //UPDATE Parameter Label
     if(isComboParametreEnabled)
     {
-        qDebug() << "defaultParam";
         ui->labelParameters->setText("goodbyedpi.exe " + defaultparameters.join(" "));
         return defaultparameters;
     }
     else if(settings->value("Parametre/customParam").toString() == "true" && settings->value("Parametre/quickSettings").toString() == "false")
     {
-        qDebug() << "customParam";
         ui->labelParameters->setText("goodbyedpi.exe " + customParameters.join(" "));
         return customParameters;
     }
     else if(settings->value("Parametre/customParam").toString() == "false" && settings->value("Parametre/quickSettings").toString() == "false")
     {
-        qDebug() << "noParam";
         ui->labelParameters->setText("goodbyedpi.exe");
         return QStringList();
     }
     else if(settings->value("Parametre/customParam").toString() == "true" && settings->value("Parametre/quickSettings").toString() == "true")
     {
-        qDebug() << "noParam2";
-        ui->labelParameters->setText("goodbyedpi.exe");
+        ui->labelParameters->setText("goodbyedpi.exe" + quickParameters.join(" "));
         return QStringList();
     }
     else
     {
-        qDebug() << "quickParam";
         ui->labelParameters->setText("goodbyedpi.exe " + quickParameters.join(" "));
         return quickParameters;
     }

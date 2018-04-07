@@ -177,11 +177,11 @@ void Settings::onCheckedCustomParam()
         ui->paramBox->setEnabled(true);
         ayarR->setValue("Parametre/customParam", true);
         if(ayarR->value("Parametre/quickSettings").toBool()){
-            ayarR->setValue("Parametre/quickSettings", true);
+            ui->groupQuickSettings->setEnabled(true);
         }
         else
         {
-            ayarR->setValue("Parametre/quickSettings", false);
+            ui->groupQuickSettings->setEnabled(false);
         }
         ayarR->setValue("Parametre/defaultParam", false);
     }
