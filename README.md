@@ -13,6 +13,7 @@
 Parametrelerin tam olarak kayıt edilebilmesi için Ayarlar penceresini **kapatıp** çalıştırmanız gerekli. Sonraki güncellemede eklenecek. Ana ekrandaki **Log** bölümünden uygulamanın düzgün çalışıp çalışmadığını kontrol edebilirsiniz, herhangi bir problem yaşadığınızda bildirmekten çekinmeyin.
 
 > 64Bit Sürümü kullanmak için VC++ 2017 paketini yüklemeniz gerekmektedir.
+>
 > Link: [Visual Studio 2017](https://support.microsoft.com/tr-tr/help/2977003/the-latest-supported-visual-c-downloads)
 
 Başlangıçta özel bir ayar yapmanıza gerek yoktur. **Başlat** butonuna tıklayıp sansürsüz internetin keyfini çıkarabilirsiniz. Özel Ayarlar isteğe bağlı şekilde düzenlenebilir. İlk açılışta en uygun ayar **Ön Tanımlı** olarak ayarlanmıştır.
@@ -39,4 +40,5 @@ Qt Creator'ı başlattıktan sonra File - Open File tıklayıp **.pro** uzantıl
 ## Bağış
 
 Destek olmak için,
+
 [Patreon](https://www.patreon.com/hex4d0r)
