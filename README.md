@@ -2,6 +2,10 @@
 
 [GoodByeDPI](https://github.com/ValdikSS/GoodbyeDPI) isimli anti sansür uygulaması için kullanıcı arayüzü ile kolay kullanım sağlar.
 
+> İndirme Bağlantıları
+>[32 Bit](https://github.com/hex4d0r/GUI-for-GoodbyeDPI/releases/download/v1.0/GoodByeDPI_GUI_32Bit.zip)
+>[64 Bit](https://github.com/hex4d0r/GUI-for-GoodbyeDPI/releases/download/v1.0/GoodByeDPI_GUI_64Bit.zip)
+
 # Kullanım
 
 Parametrelerin tam olarak kayıt edilebilmesi için Ayarlar penceresini **kapatıp** çalıştırmanız gerekli. Sonraki güncellemede eklenecek. Ana ekrandaki **Log** bölümünden uygulamanın düzgün çalışıp çalışmadığını kontrol edebilirsiniz, herhangi bir problem yaşadığınızda bildirmekten çekinmeyin.
