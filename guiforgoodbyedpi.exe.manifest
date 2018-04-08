@@ -1,19 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
-  <assemblyIdentity version="2.0.0.0" processorArchitecture="X86"
-  name="guiforgoodbyedpi.myapp" type="win32" />
-  <description>GUI for GoodByeDPI Application</description>
-  <dependency />
-  <!-- Identify the application security requirements. -->
-  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
-    <security>
-      <requestedPrivileges>
-        <requestedExecutionLevel
-          level="requireAdministrator"
-          uiAccess="false"/>
-        </requestedPrivileges>
-       </security>
-   </trustInfo>
-   <!-- padding to four-byte multiple file size including the byte order mark -->
-  <!-- padding 123 -->
+    <assemblyIdentity version="1.0.0.0" processorArchitecture="X86" name="GoodbyeDPI GUI" type="win32"/>
+    <description>GoodbyeDPI GPU</description>
+    <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+        <security>
+            <requestedPrivileges>
+                <requestedExecutionLevel level="requireAdministrator" uiAccess="false"/>
+            </requestedPrivileges>
+        </security>
+    </trustInfo>
 </assembly>

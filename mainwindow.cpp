@@ -27,11 +27,11 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setWindowTitle("GoodByeDPI için GUI");
+    setWindowTitle("GoodByeDPI GUI");
     setWindowIcon(QIcon(":/images/images/icon.ico"));
 
     trayIcon->setIcon(QIcon(":/images/images/icon.ico"));
-    trayIcon->setToolTip("GUIForGoodByeDPI by hex4d0r");
+    trayIcon->setToolTip("GoodByeDPI GUI by hex4d0r");
 
     ui->labelParameters->setWordWrap(true);
 
@@ -80,16 +80,17 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     //Capturing state of default parameters checkbox for enable/disable parameters combo box.
     connect(ayarlar, &Settings::defaultParamStateChanged, this, &MainWindow::onDefaultParamCheckState, Qt::QueuedConnection);
 
-    //PARAMETRE DUZENLE SILENT parametresini unutma procstart calistiginda oku parametreleri
     connect(ui->btnStart, &QPushButton::clicked, this, &MainWindow::procStart);
     connect(ui->btnStop, &QPushButton::clicked, this, &MainWindow::procStop);
     connect(proc, &QProcess::stateChanged, this, &MainWindow::handleState);
 
     ui->comboParametre->addItem("russia_blacklist", QVariant("-1 --blacklist blacklist.txt"));
-    ui->comboParametre->addItem("russia_blacklist_dnsredir", QVariant("-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt"));
+    ui->comboParametre->addItem("russia_blacklist_dnsredir", QVariant("-1 --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt"));
     ui->comboParametre->addItem("all", QVariant("-1"));
-    ui->comboParametre->addItem("all_dnsredir", QVariant("-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253"));
-    ui->comboParametre->addItem("all_dnsredir_hardcore", QVariant("-1 -a -m --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253"));
+    ui->comboParametre->addItem("all_dnsredir (Tavsiye Edilen)", QVariant("-1 --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253"));
+    ui->comboParametre->addItem("all_dnsredir_hardcore", QVariant("-1 -a -m --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253"));
+
+    ui->comboParametre->setCurrentIndex(3);
 
     ui->btnStop->setEnabled(false);
 
@@ -98,7 +99,7 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
         prepareParameters(true);
     });
 
-    //Capturing ouput of goodbyedpi.exe but doesn't work, because goodbyedpi.exe doesn't flush stdout. Author need to add fflush(stdout) to aftery every printf() function.
+    //Capturing ouput of goodbyedpi.exe
     connect(proc, &QProcess::readyReadStandardOutput, this, &MainWindow::processOutput);
     connect(proc, &QProcess::readyReadStandardError, this, &MainWindow::processError);
 
@@ -146,12 +147,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::procStart()
 {
     proc->setArguments(prepareParameters(ui->comboParametre->isEnabled()));
-    ui->debugArea->appendPlainText("[*] " + ui->comboParametre->currentText());
+    //ui->debugArea->appendPlainText("[*] " + ui->comboParametre->currentText());
     proc->start(QDir::currentPath() + "/goodbyedpi/goodbyedpi.exe", QProcess::ReadWrite);
     proc->waitForStarted(1000);
-
-    ui->debugArea->appendPlainText(proc->errorString());
-
 }
 
 void MainWindow::procStop()
@@ -169,10 +167,6 @@ void MainWindow::processOutput()
     {
         ui->debugArea->appendPlainText(output);
     }
-    else
-    {
-        ui->debugArea->appendPlainText(proc->errorString());
-    }
 }
 
 void MainWindow::processError()
@@ -180,11 +174,6 @@ void MainWindow::processError()
     proc->setReadChannel(QProcess::StandardError);
     QString errout = proc->readAllStandardError();
     if(!errout.isEmpty())
-    {
-        ui->debugArea->appendPlainText(errout);
-
-    }
-    else
     {
         ui->debugArea->appendPlainText(proc->errorString());
     }
@@ -201,13 +190,12 @@ void MainWindow::handleState()
     }
     else if(proc->state() == QProcess::Running)
     {
-        ui->debugArea->appendPlainText("[+] Başlatıldı\n[+] PID:" + QString::number(proc->processId()));
+        ui->debugArea->appendPlainText("[+] Başlatıldı\n[+] PID:" + QString::number(proc->processId()) + "\n");
         ui->btnStart->setEnabled(false);
         ui->btnStop->setEnabled(true);
         trayMenu->actions().at(0)->setEnabled(false);
         trayMenu->actions().at(1)->setEnabled(true);
     }
-    ui->debugArea->appendPlainText(proc->errorString());
 }
 
 void MainWindow::onActionAyarlar()
@@ -299,16 +287,16 @@ QStringList MainWindow::prepareParameters(bool isComboParametreEnabled)
         defaultparameters << "-1 --blacklist blacklist.txt";
         break;
     case 1:
-        defaultparameters << "-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt";
+        defaultparameters << "-1 --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt";
         break;
     case 2:
         defaultparameters << "-1";
         break;
     case 3:
-        defaultparameters << "-1 --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253";
+        defaultparameters << "-1 --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253";
         break;
     case 4:
-        defaultparameters << "-1 -a -m --dns-addr 77.88.8.8 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253";
+        defaultparameters << "-1 -a -m --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253";
     }
 
     //CUSTOMPARAMETERS

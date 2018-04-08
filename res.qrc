@@ -6,5 +6,6 @@
         <file>images/settings-gears-button.png</file>
         <file>images/stop-button.png</file>
         <file>images/icon.ico</file>
+        <file>images/icon.png</file>
     </qresource>
 </RCC>

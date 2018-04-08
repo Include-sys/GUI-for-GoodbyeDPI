@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>395</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@
     <item>
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
-       <string>Debug</string>
+       <string>Log</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -88,7 +88,6 @@
    <addaction name="actionAyarlar"/>
    <addaction name="actionAbout"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionAyarlar">
    <property name="icon">
     <iconset>
@@ -109,7 +108,10 @@
     </iconset>
    </property>
    <property name="text">
-    <string>Hakkinda</string>
+    <string>Hakkında</string>
+   </property>
+   <property name="toolTip">
+    <string>Hakkında</string>
    </property>
   </action>
  </widget>
