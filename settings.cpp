@@ -98,7 +98,7 @@ Settings::Settings(QWidget *parent) :
         if(ui->checkDnsv6Addr->checkState() == Qt::Checked)
         {
             lineDnsv6AddrValue = ui->lineDnsv6Addr->text();
-            qDebug() << "1: " + lineDnsv6AddrValue;
+            //qDebug() << "1: " + lineDnsv6AddrValue;
             ayar->setValue("Parametre/paramDnsv6Addr", "--dnsv6-addr " + lineDnsv6AddrValue);
         }
     });
@@ -768,7 +768,7 @@ void Settings::loadSettings()
 
         ui->lineDnsv6Addr->setText(list.at(1));
         lineDnsv6AddrValue = list.at(1);
-        qDebug() << lineDnsv6AddrValue;
+        //qDebug() << lineDnsv6AddrValue;
     }
     else
     {
@@ -818,10 +818,10 @@ void Settings::loadSettings()
 
     if(ayarR->value("System/disableNotifications").toBool())
     {
-        ui->notificationBox->setChecked(false);
+        ui->notificationBox->setChecked(true);
     }
     else
     {
-        ui->notificationBox->setChecked(true);
+        ui->notificationBox->setChecked(false);
     }
 }

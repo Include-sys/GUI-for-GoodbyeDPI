@@ -93,6 +93,11 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
 
     ui->btnStop->setEnabled(false);
 
+    connect(ui->comboParametre, QOverload<int>::of(&QComboBox::currentIndexChanged), [this]()
+    {
+        prepareParameters(true);
+    });
+
     //Capturing ouput of goodbyedpi.exe but doesn't work, because goodbyedpi.exe doesn't flush stdout. Author need to add fflush(stdout) to aftery every printf() function.
     connect(proc, &QProcess::readyReadStandardOutput, this, &MainWindow::processOutput);
     connect(proc, &QProcess::readyReadStandardError, this, &MainWindow::processError);
@@ -102,14 +107,10 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     else
         prepareParameters(false);
 
-    //COKUYOR
-    if(!arguments.isEmpty())
+    if(!this->isVisible())
     {
-        if(arguments.at(1) == "-silent")
-        {
-            hideAction->setEnabled(false);
-            showAction->setEnabled(true);
-        }
+        hideAction->setEnabled(false);
+        showAction->setEnabled(true);
     }
 }
 
@@ -121,7 +122,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    qDebug() << settings->value("System/systemTray").toString();
+    //qDebug() << settings->value("System/systemTray").toString();
     if(settings->value("System/systemTray").toString() == "true" && (this->isTopLevel() || this->isVisible()))
     {
         event->ignore();
@@ -144,49 +145,24 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::procStart()
 {
-    if(proc->state() == QProcess::Running)
-    {
-        return;
-    }
-    proc->setProcessChannelMode(QProcess::MergedChannels);
-
-    if(!tmpDir->isValid())  return;
-    QString tempPath = tmpDir->path();
-
-    QDirIterator it(":/GBDPI", QDir::Files, QDirIterator::Subdirectories);
-    QList<QFileInfo> f;
-    while (it.hasNext()) {
-        f << it.next();
-    }
-
-    QString tmp;
-
-    for(auto i=0; i < f.size(); i++)
-    {
-        tmp = tempPath + "/" + f[i].fileName();
-        QFile::copy(f[i].absoluteFilePath(), tmp);
-    }
-    //tempPath + "/goodbyedpi.exe"
-    //QProcess::execute("PUSHD " + tempPath + "/");
-    proc->setArguments(QStringList() << ui->comboParametre->currentText());
+    proc->setArguments(prepareParameters(ui->comboParametre->isEnabled()));
     ui->debugArea->appendPlainText("[*] " + ui->comboParametre->currentText());
-    proc->start(tempPath + "/goodbyedpi.exe", QProcess::Unbuffered | QProcess::ReadWrite);
+    proc->start(QDir::currentPath() + "/goodbyedpi/goodbyedpi.exe", QProcess::ReadWrite);
     proc->waitForStarted(1000);
 
-    qDebug() << proc->errorString();
+    ui->debugArea->appendPlainText(proc->errorString());
 
 }
 
 void MainWindow::procStop()
 {
-    proc->kill();
+    proc->close();
     proc->waitForFinished(2000);
 }
 
 void MainWindow::processOutput()
 {
     proc->setReadChannel(QProcess::StandardOutput);
-    proc->write(" ");
     QString output = proc->readAllStandardOutput();
 
     if(!output.isEmpty())
@@ -201,8 +177,8 @@ void MainWindow::processOutput()
 
 void MainWindow::processError()
 {
+    proc->setReadChannel(QProcess::StandardError);
     QString errout = proc->readAllStandardError();
-
     if(!errout.isEmpty())
     {
         ui->debugArea->appendPlainText(errout);
@@ -231,6 +207,7 @@ void MainWindow::handleState()
         trayMenu->actions().at(0)->setEnabled(false);
         trayMenu->actions().at(1)->setEnabled(true);
     }
+    ui->debugArea->appendPlainText(proc->errorString());
 }
 
 void MainWindow::onActionAyarlar()
