@@ -35,7 +35,7 @@ Qt Creator'ı başlattıktan sonra File - Open File tıklayıp **.pro** uzantıl
 |--| --|
 | Çalışma Saatleri Ayarlama |Parametre Sisteminin Yeniden Kodlanması|
 | Güncelleme Yöneticisi  |Daha İyi Hata Tespiti|
-| |Arayüzde Yapılacak Değişiklikler |
+| Sistem DNS'i Değiştirebilme|Arayüzde Yapılacak Değişiklikler |
 
 ## Bağış
 
