@@ -1,5 +1,7 @@
 <RCC>
-    <qresource prefix="/"/>
+    <qresource prefix="/">
+        <file>english.qm</file>
+    </qresource>
     <qresource prefix="/images">
         <file>images/info-button.png</file>
         <file>images/play-button.png</file>

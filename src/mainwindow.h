@@ -40,6 +40,8 @@ public slots:
 
     QStringList prepareParameters(bool isComboParametreEnabled);
 
+    void catchError(QProcess::ProcessError err);
+
 private:
     Ui::MainWindow *ui;
 

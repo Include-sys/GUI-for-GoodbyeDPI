@@ -87,7 +87,7 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     ui->comboParametre->addItem("russia_blacklist", QVariant("-1 --blacklist blacklist.txt"));
     ui->comboParametre->addItem("russia_blacklist_dnsredir", QVariant("-1 --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt"));
     ui->comboParametre->addItem("all", QVariant("-1"));
-    ui->comboParametre->addItem("all_dnsredir (Tavsiye Edilen)", QVariant("-1 --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253"));
+    ui->comboParametre->addItem(tr("all_dnsredir (Tavsiye Edilen)"), QVariant("-1 --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253"));
     ui->comboParametre->addItem("all_dnsredir_hardcore", QVariant("-1 -a -m --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253"));
 
     ui->comboParametre->setCurrentIndex(3);
@@ -113,6 +113,8 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
         hideAction->setEnabled(false);
         showAction->setEnabled(true);
     }
+
+    connect(proc, &QProcess::errorOccurred, this, &MainWindow::catchError);
 }
 
 MainWindow::~MainWindow()
@@ -135,7 +137,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         {
             qDebug() << "Message will shown";
             QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
-            trayIcon->showMessage("GoodByeDPI GUI", "Arka planda çalışıyor.", icon, 4000);
+            trayIcon->showMessage("GoodByeDPI GUI", tr("Arka planda çalışıyor."), icon, 1000);
         }
     }
     else
@@ -148,8 +150,16 @@ void MainWindow::procStart()
 {
     proc->setArguments(prepareParameters(ui->comboParametre->isEnabled()));
     //ui->debugArea->appendPlainText("[*] " + ui->comboParametre->currentText());
-    proc->start(QDir::currentPath() + "/goodbyedpi/goodbyedpi.exe", QProcess::ReadWrite);
+    //ui->debugArea->appendPlainText("Exe Path: " + QDir::currentPath() + "/goodbyedpi/goodbyedpi.exe");
+    proc->start(QDir::currentPath() + "/goodbyedpi/goodbyedpi.exe", QProcess::ReadOnly);
     proc->waitForStarted(1000);
+
+    if(!settings->value("System/disableNotifications").toBool() && !this->isVisible())
+    {
+        qDebug() << "Message will shown";
+        QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
+        trayIcon->showMessage("GoodByeDPI GUI", tr("Başlatıldı."), icon, 1000);
+    }
 }
 
 void MainWindow::procStop()
@@ -182,7 +192,7 @@ void MainWindow::handleState()
 {
     if(proc->state() == QProcess::NotRunning)
     {
-        ui->debugArea->appendPlainText("[-] Durduruldu");
+        ui->debugArea->appendPlainText(tr("[-] Durduruldu"));
         ui->btnStart->setEnabled(true);
         ui->btnStop->setEnabled(false);
         trayMenu->actions().at(1)->setEnabled(false);
@@ -190,7 +200,7 @@ void MainWindow::handleState()
     }
     else if(proc->state() == QProcess::Running)
     {
-        ui->debugArea->appendPlainText("[+] Başlatıldı\n[+] PID:" + QString::number(proc->processId()) + "\n");
+        ui->debugArea->appendPlainText(tr("[+] Başlatıldı\n[+] PID:") + QString::number(proc->processId()) + "\n");
         ui->btnStart->setEnabled(false);
         ui->btnStop->setEnabled(true);
         trayMenu->actions().at(0)->setEnabled(false);
@@ -329,4 +339,9 @@ QStringList MainWindow::prepareParameters(bool isComboParametreEnabled)
         return quickParameters;
     }
 
+}
+
+void MainWindow::catchError(QProcess::ProcessError err)
+{
+    ui->debugArea->appendPlainText(proc->errorString());
 }
