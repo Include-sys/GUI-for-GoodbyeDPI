@@ -68,6 +68,18 @@
         <source>all_dnsredir (Tavsiye Edilen)</source>
         <translation>all_dnsredir (Recommended)</translation>
     </message>
+    <message>
+        <source>Gizle</source>
+        <translation>Hide</translation>
+    </message>
+    <message>
+        <source>Göster</source>
+        <translation>Show</translation>
+    </message>
+    <message>
+        <source>Çıkış</source>
+        <translation>Exit</translation>
+    </message>
 </context>
 <context>
     <name>Settings</name>
