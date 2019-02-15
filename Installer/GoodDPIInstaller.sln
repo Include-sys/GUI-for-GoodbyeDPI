@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GoodDPIInstaller", "GoodDPIInstaller\GoodDPIInstaller.vdproj", "{645684B6-11B7-4AEB-B0CE-5C4B52932D86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{645684B6-11B7-4AEB-B0CE-5C4B52932D86}.Debug|Default.ActiveCfg = Debug
+		{645684B6-11B7-4AEB-B0CE-5C4B52932D86}.Debug|Default.Build.0 = Debug
+		{645684B6-11B7-4AEB-B0CE-5C4B52932D86}.Release|Default.ActiveCfg = Release
+		{645684B6-11B7-4AEB-B0CE-5C4B52932D86}.Release|Default.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A327FDFC-6309-4ADC-851B-76AAE562EAE9}
+	EndGlobalSection
+EndGlobal
