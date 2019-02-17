@@ -13,7 +13,18 @@ int main(int argc, char *argv[])
 
     QTranslator t;
 
-    if(systemLang != "Turkish")
+    if(systemLang == "Turkish")
+    {
+
+    }
+
+    else if (systemLang == "Korean")
+    {
+        t.load(":/lang_ko.qm");
+        a.installTranslator(&t);
+    }
+
+    else
     {
         t.load(":/english.qm");
         a.installTranslator(&t);
