@@ -175,7 +175,9 @@ void MainWindow::processOutput()
 
     if(!output.isEmpty())
     {
-        ui->debugArea->appendPlainText(output);
+        QString prettyOutput = QString::fromStdString(output.toStdString());
+        prettyOutput.replace(",", "\n");
+        ui->debugArea->appendPlainText(prettyOutput);
     }
 }
 
