@@ -5,17 +5,17 @@
 
 Settings::Settings(QWidget *parent) :
     QWidget(parent),
+    ui(new Ui::Settings),
     ayarR(new QSettings("HexOpenSource", "GBDPI-GUI")),
-    spinDnsPortValue(1253),
-    lineDnsAddrValue("208.67.220.220"),
-    spinDnsv6PortValue(1253),
-    lineDnsv6AddrValue("2a02:6b8::feed:0ff"),
-    spinEValue(0),
     spinFValue(0),
     spinKValue(0),
+    spinEValue(0),
     spinPortValue(0),
     lineIpIdValue(""),
-    ui(new Ui::Settings)
+    lineDnsAddrValue("208.67.220.220"),
+    spinDnsPortValue(1253),
+    lineDnsv6AddrValue("2a02:6b8::feed:0ff"),
+    spinDnsv6PortValue(1253)
 {
     ui->setupUi(this);
     setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);

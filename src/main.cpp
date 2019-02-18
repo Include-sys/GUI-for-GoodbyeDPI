@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 
     else
     {
-        t.load(":/english.qm");
+        t.load(":/lang_en.qm");
         a.installTranslator(&t);
     }
 

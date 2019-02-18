@@ -12,7 +12,8 @@
 
 MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     QMainWindow(parent),
-    ayarlar(new Settings()),
+    ui(new Ui::MainWindow),
+    tmpDir(new QTemporaryDir()),
     settings(new QSettings("HexOpenSource", "GBDPI-GUI", this)),
     trayIcon(new QSystemTrayIcon(this)),
     trayMenu(new QMenu(this)),
@@ -22,16 +23,17 @@ MainWindow::MainWindow(QStringList arguments, QWidget *parent) :
     startAction(new QAction(QIcon(":/images/images/play-button.png"), tr("Başlat"), this)),
     stopAction(new QAction(QIcon(":/images/images/stop-button.png"), tr("Durdur"), this)),
     settingsAction(new QAction(QIcon(":/images/images/settings-gears-button.png"), tr("Ayarlar"), this)),
-    tmpDir(new QTemporaryDir()),
     proc(new QProcess(this)),
-    ui(new Ui::MainWindow)
+    ayarlar(new Settings())
+
+
 {
     ui->setupUi(this);
     setWindowTitle("GoodByeDPI GUI");
     setWindowIcon(QIcon(":/images/images/icon.ico"));
 
     trayIcon->setIcon(QIcon(":/images/images/icon.ico"));
-    trayIcon->setToolTip("GoodByeDPI GUI by hex4d0r");
+    trayIcon->setToolTip("GoodByeDPI GUI by include");
 
     ui->labelParameters->setWordWrap(true);
 
@@ -148,10 +150,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::procStart()
 {
-    proc->setArguments(prepareParameters(ui->comboParametre->isEnabled()));
-    //ui->debugArea->appendPlainText("[*] " + ui->comboParametre->currentText());
-    //ui->debugArea->appendPlainText("Exe Path: " + QDir::currentPath() + "/goodbyedpi/goodbyedpi.exe");
-    proc->start(QDir::currentPath() + "/goodbyedpi/goodbyedpi.exe", QProcess::ReadOnly);
+    //proc->setArguments(prepareParameters(ui->comboParametre->isEnabled()));
+    //ui->debugArea->appendPlainText("\"" + QDir::currentPath() + QString("/goodbyedpi/goodbyedpi.exe\"") + " " +prepareParameters(ui->comboParametre->isEnabled()).join(" "));
+    //It's only way GoodbyeDPI works, because no matter what I try, It crashes with different arguments except "-1" If I use argument list method like start(program, arglist, mode)
+    //I have to add manual "(quotes) for PATHs that contains space, because It start function tries to execute it like command prompt and you can't use space char at command prompt.
+    proc->start("\"" + QDir::currentPath() + QString("/goodbyedpi/goodbyedpi.exe\"") + " " +prepareParameters(ui->comboParametre->isEnabled()).join(" "), QProcess::ReadOnly);
     proc->waitForStarted(1000);
 
     if(!settings->value("System/disableNotifications").toBool() && !this->isVisible())
@@ -299,16 +302,16 @@ QStringList MainWindow::prepareParameters(bool isComboParametreEnabled)
         defaultparameters << "-1 --blacklist blacklist.txt";
         break;
     case 1:
-        defaultparameters << "-1 --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253 --blacklist blacklist.txt";
+        defaultparameters << "-1 --dns-addr 1.1.1.1 --dns-port 1253 --blacklist blacklist.txt";
         break;
     case 2:
         defaultparameters << "-1";
         break;
     case 3:
-        defaultparameters << "-1 --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253";
+        defaultparameters << "-1 --dns-addr 1.1.1.1 --dns-port 1253";
         break;
     case 4:
-        defaultparameters << "-1 -a -m --dns-addr 1.1.1.1 --dns-port 1253 --dnsv6-addr 2a02:6b8::feed:0ff --dnsv6-port 1253";
+        defaultparameters << "-1 -a -m --dns-addr 1.1.1.1 --dns-port 1253";
     }
 
     //CUSTOMPARAMETERS

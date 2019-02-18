@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>english.qm</file>
+        <file>lang_ko.qm</file>
+        <file>lang_en.qm</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/info-button.png</file>
