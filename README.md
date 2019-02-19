@@ -23,7 +23,7 @@ Compile GoodbyeDPI Yourself(Not Translated Yet)
 > [Google Docs](https://docs.google.com/document/d/1LMGmFVu17NKItqTpJKGKXMhX58xWcCJPezddCo73e7c/edit?usp=sharing)
 
 
-##ToDo Features
+## ToDo Features
 
 | Feature | Improvement |
 | -- | --|
@@ -31,5 +31,5 @@ Compile GoodbyeDPI Yourself(Not Translated Yet)
 | Updater |Better Error Handling|
 | Changing System DNS(maybe Dnscrypt)|Improvement on Interface |
 
-##  Donation
+## Donation
 [Patreon](https://www.patreon.com/hex4d0r)
