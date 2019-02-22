@@ -1,44 +1,35 @@
-# GoodByeDPI GUI
+# GUI For GoodByeDPI
 
-[GoodByeDPI](https://github.com/ValdikSS/GoodbyeDPI) isimli anti sansür uygulaması için kullanıcı arayüzü ile kolay kullanım sağlar.
 
-> İndirme Bağlantıları
->
->[32 Bit](https://github.com/hex4d0r/GUI-for-GoodbyeDPI/releases/download/v1.0/GoodByeDPI_GUI_32Bit.zip)
->
->[64 Bit](https://github.com/hex4d0r/GUI-for-GoodbyeDPI/releases/download/v1.0/GoodByeDPI_GUI_64Bit.zip)
+# Download
+[Releases](https://github.com/hex4d0r/GUI-for-GoodbyeDPI/releases/download/v1.0.3/)
 
-# Kullanım
 
-Parametrelerin tam olarak kayıt edilebilmesi için Ayarlar penceresini **kapatıp** çalıştırmanız gerekli. Sonraki güncellemede eklenecek. Ana ekrandaki **Log** bölümünden uygulamanın düzgün çalışıp çalışmadığını kontrol edebilirsiniz, herhangi bir problem yaşadığınızda bildirmekten çekinmeyin.
 
-> 64Bit Sürümü kullanmak için VC++ 2017 paketini yüklemeniz gerekmektedir.
->
-> Link: [Visual Studio 2017](https://support.microsoft.com/tr-tr/help/2977003/the-latest-supported-visual-c-downloads)
+> You need to install Microsoft VC++ 2017 in order to use GUI For GoodbyeDPI
 
-Başlangıçta özel bir ayar yapmanıza gerek yoktur. **Başlat** butonuna tıklayıp sansürsüz internetin keyfini çıkarabilirsiniz. Özel Ayarlar isteğe bağlı şekilde düzenlenebilir. İlk açılışta en uygun ayar **Ön Tanımlı** olarak ayarlanmıştır.
+> Link: [MSVC++ 2017](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
 
-**Windows DNS adresini kendiniz değiştirmeniz gerekmektedir. Aksi halde kuvvetle muhtemel engellenmiş sitelere erişim sağlayamayacaksınız.**
+## Warning
+For save custom parameters to save you need to close Settings window first then start. You can check whether app does work properly or not in Log section. Feel free to report issues.
 
-## Kaynak Koddan Derleme
+## Settings
+You don't need to configure any option, custom parameters are optinal.It's recommended to change your Windows DNS while using GUI For GoodbyeDPI.
 
-Yazılım MSVC-2017(64Bit Versiyon) ve MinGW-5.3.0(32Bit Versiyon) versiyonları ile derlenip **test** edilmiştir. Sadece bu derleyicileri kullanma zorunluluğu yoktur. Qt Framework Online Installer ile kurulum gerçekleştirirken, **MSVC ve MinGW derleyicilerinin yüklenmesi için işaretlemeyi unutmayın**.
+## Compilation of GUI For GoodbyeDPI
+In latest release I used Qt 5.12 for compile but you can use any Qt 5.x version. I compiled without an issue with MSVC 2017 32Bit and 64Bit compilers. You can also use MinGW compilers as well.
 
-Qt Creator'ı başlattıktan sonra File - Open File tıklayıp **.pro** uzantılı dosyayı seçin. Sonraki ekranda Configure butonuna basarak derleyiciniz için gerekli ayarlamaları yaptıktan sonra Build butonuna basarak yazılımı derleyebilirsiniz. Ardından Debug veya Release dizininde windeployqt uygulaması ile yazılımın çalışabilmesi için gerekli olan Qt kütüphanelerini otomatik şekilde kopyalayabilirsiniz.
-
-## GoodByeDPI'ı Kaynak Koddan Derleme
-
+Compile GoodbyeDPI Yourself(Not Translated Yet)
 > [Google Docs](https://docs.google.com/document/d/1LMGmFVu17NKItqTpJKGKXMhX58xWcCJPezddCo73e7c/edit?usp=sharing)
 
-## İleriki Sürümlerde Eklenmesi Planlanan/Beklenen Özellikler
-|Özellik| İyileştirme |
-|--| --|
-| Çalışma Saatleri Ayarlama |Parametre Sisteminin Yeniden Kodlanması|
-| Güncelleme Yöneticisi  |Daha İyi Hata Tespiti|
-| Sistem DNS'i Değiştirebilme|Arayüzde Yapılacak Değişiklikler |
 
-## Bağış
+## ToDo Features
 
-Destek olmak için,
+| Feature | Improvement |
+| -- | --|
+| Installer |Reimplementation of Parameter System|
+| Updater |Better Error Handling|
+| Changing System DNS(maybe Dnscrypt)|Improvement on Interface |
 
+## Donation
 [Patreon](https://www.patreon.com/hex4d0r)
