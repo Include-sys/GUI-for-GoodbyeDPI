@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSysInfo>
 #include <QTemporaryDir>
 #include <QProcess>
 #include <QSettings>
@@ -45,6 +46,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
 
+    QSysInfo *info;
     QTemporaryDir *tmpDir;
     QSettings *settings;
 

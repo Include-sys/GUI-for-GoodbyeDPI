@@ -11,4 +11,7 @@
         <file>images/icon.ico</file>
         <file>images/icon.png</file>
     </qresource>
+    <qresource prefix="/service">
+        <file>service_remove.cmd</file>
+    </qresource>
 </RCC>

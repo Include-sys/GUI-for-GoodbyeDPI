@@ -154,7 +154,19 @@ void MainWindow::procStart()
     //ui->debugArea->appendPlainText("\"" + QDir::currentPath() + QString("/goodbyedpi/goodbyedpi.exe\"") + " " +prepareParameters(ui->comboParametre->isEnabled()).join(" "));
     //It's only way GoodbyeDPI works, because no matter what I try, It crashes with different arguments except "-1" If I use argument list method like start(program, arglist, mode)
     //I have to add manual "(quotes) for PATHs that contains space, because It start function tries to execute it like command prompt and you can't use space char at command prompt.
-    proc->start("\"" + QDir::currentPath() + QString("/goodbyedpi/goodbyedpi.exe\"") + " " +prepareParameters(ui->comboParametre->isEnabled()).join(" "), QProcess::ReadOnly);
+
+
+    if(info->productVersion() != "7")
+    {
+        proc->start("\"" + QDir::currentPath() + QString("/goodbyedpi/goodbyedpi.exe\"") + " " +prepareParameters(ui->comboParametre->isEnabled()).join(" "), QProcess::ReadOnly);
+
+    }
+    else {
+        proc->setArguments(prepareParameters(ui->comboParametre->isEnabled()));
+        proc->setProgram(QDir::currentPath() + QString("/goodbyedpi/goodbyedpi.exe"));
+        proc->start(QProcess::ReadOnly);
+    }
+
     proc->waitForStarted(1000);
 
     if(!settings->value("System/disableNotifications").toBool() && !this->isVisible())
@@ -169,6 +181,7 @@ void MainWindow::procStop()
 {
     proc->close();
     proc->waitForFinished(2000);
+    QProcess::execute(":/service_remove.cmd");
 }
 
 void MainWindow::processOutput()
