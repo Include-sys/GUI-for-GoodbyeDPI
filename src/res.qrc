@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>lang_ko.qm</file>
+        <file>lang_en.qm</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>images/info-button.png</file>
+        <file>images/play-button.png</file>
+        <file>images/settings-gears-button.png</file>
+        <file>images/stop-button.png</file>
+        <file>images/icon.ico</file>
+        <file>images/icon.png</file>
+    </qresource>
+    <qresource prefix="/service">
+        <file>service_remove.cmd</file>
+    </qresource>
+</RCC>
